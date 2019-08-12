@@ -1,5 +1,3 @@
-from typing import List
-
 import MeCab
 import numpy as np
 
@@ -10,6 +8,18 @@ def tokenize(text: str) -> list:
 
 
 class SWEM:
+    """Implementation of SWEM.
+
+    Parameters
+    ----------
+    model: gensim.models.word2vec.Word2Vec
+        Word2Vec model
+
+    tokenizer: callable
+        Callable object to tokenize input text.
+
+    uniform_range: tuple of float
+    """
 
     def __init__(self, model, tokenizer=None, uniform_range=(-0.01, 0.01)):
         self.model = model
@@ -30,7 +40,18 @@ class SWEM:
                                                    self.embed_dim))
         return np.array(doc_embed)
 
-    def infer_vector(self, doc, method='max'):
+    @staticmethod
+    def _hierarchical_pool(doc_embed: np.ndarray, n: int) -> np.ndarray:
+        text_len = doc_embed.shape[0]
+        if n > text_len:
+            raise ValueError(f'window size [{n}] must be less '
+                             f'than text length{text_len}.')
+
+        pooled_doc_embed = [np.mean(
+            doc_embed[i:i + n], axis=0) for i in range(text_len - n + 1)]
+        return np.max(pooled_doc_embed, axis=0)
+
+    def infer_vector(self, doc: str, method='max', n=3) -> np.ndarray:
         doc_embed = self._doc_embed(doc)
 
         if method == 'max':
@@ -42,5 +63,8 @@ class SWEM:
         elif method == 'concat':
             return np.hstack([doc_embed.mean(axis=0), doc_embed.max(axis=0)])
 
+        elif method == 'hierarchical':
+            return self._hierarchical_pool(doc_embed, n)
+
         else:
-            raise AttributeError(f'infer_vector has no attribute method={method}.')
+            raise AttributeError(f'infer_vector has no attribute method [{method}].')

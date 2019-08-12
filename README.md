@@ -2,6 +2,8 @@
 Implementation of SWEM(Simple Word-Embedding-based Models)  
 [Baseline Needs More Love: On Simple Word-Embedding-Based Models and Associated Pooling Mechanisms (ACL 2018)](https://arxiv.org/abs/1805.09843)
 
+Details are available [here(Japanese)](https://scrapbox.io/whey-memo/SWEM(Simple_Word-Embedding-Based_Models)).
+
 ## Example
 
 ```python example.py
