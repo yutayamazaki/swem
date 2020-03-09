@@ -10,28 +10,29 @@ Implementation of SWEM(Simple Word-Embedding-based Models)
 
 Details are available [here(Japanese)](https://scrapbox.io/whey-memo/SWEM(Simple_Word-Embedding-Based_Models)).
 
+
+## Installation
+
+```shell
+pip install swem
+```
+
 ## Example
 
 ```python example.py
-from gensim.models.word2vec import Word2Vec
-
-from swem import SWEM
+import swem
+from gensim.models import Word2Vec
 
 if __name__ == '__main__':
     model = Word2Vec.load('wiki_mecab-ipadic-neologd.model')
+    swem_embed = swem.SWEM(model)
 
-    swem = SWEM(model)
-
-    doc = '僕の名前はバナナです。'
-
-
-    for method in ['max', 'average', 'concat']:
-        print(swem.infer_vector(doc, method=method).shape)
+    doc = 'すもももももももものうち'
+    embed = swem_embed.infer_vector(doc, method='average')
+    print(embed.shape)
 ```
 
 Results  
 ```shell
 (200,)
-(200,)
-(400,)
 ```
