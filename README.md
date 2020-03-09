@@ -1,5 +1,5 @@
 # SWEM
-![GitHub Actions](https://github.com/yutayamazaki/SWEM-Python/workflows/Python%20package/badge.svg)
+![GitHub Actions](https://github.com/yutayamazaki/SWEM-Python/workflows/build/badge.svg)
 [![PyPI Version](https://img.shields.io/pypi/v/swem.svg)](https://pypi.org/project/swem/)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 ![GitHub Starts](https://img.shields.io/github/stars/yutayamazaki/SWEM-Python.svg?style=social)
