@@ -31,11 +31,11 @@ class SWEM:
         self.uniform_range = uniform_range
         self.embed_dim = self.model.wv.vector_size
 
-    def _doc_embed(self, doc: str) -> np.ndarray:
+    def _doc_embed(self, tokens: List[str]) -> np.ndarray:
         doc_embed = []
-        for word in self.tokenizer(doc):
+        for token in tokens:
             try:
-                doc_embed.append(self.model.wv[word])
+                doc_embed.append(self.model.wv[token])
             except Exception as e:
                 print(e)
                 doc_embed.append(np.random.uniform(self.uniform_range[0],
@@ -50,12 +50,15 @@ class SWEM:
             raise ValueError(f'window size [{n}] must be less '
                              f'than text length{text_len}.')
 
-        pooled_doc_embed = [np.mean(
-            doc_embed[i:i + n], axis=0) for i in range(text_len - n + 1)]
+        n_iters = text_len - n + 1
+        pooled_doc_embed = [
+            np.mean(doc_embed[i:i + n], axis=0) for i in range(n_iters)
+        ]
         return np.max(pooled_doc_embed, axis=0)
 
     def infer_vector(self, doc: str, method='max', n=3) -> np.ndarray:
-        doc_embed = self._doc_embed(doc)
+        tokens = self.tokenizer(doc)
+        doc_embed = self._doc_embed(tokens)
 
         if method == 'max':
             return doc_embed.max(axis=0)
