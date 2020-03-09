@@ -41,7 +41,7 @@ class SWEMTests(unittest.TestCase):
 
     def test_infer_vector(self):
         methods = {
-            'average': 200,
+            'avg': 200,
             'concat': 400,
             'hierarchical': 200,
             'max': 200,
@@ -60,5 +60,5 @@ class SWEMTests(unittest.TestCase):
     def test_hierarchical_pool(self):
         doc = 'すもももももももものうち'
         doc_embed = self.swem._doc_embed(doc)
-        ret = self.swem._hierarchical_pool(doc_embed, n=3)
+        ret = self.swem._hierarchical_pool(doc_embed, n_windows=3)
         assert ret.shape == (200, )
