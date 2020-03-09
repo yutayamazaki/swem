@@ -4,8 +4,8 @@ import MeCab
 import numpy as np
 
 
-def tokenize(text: str) -> List[str]:
-    tagger = MeCab.Tagger('-O wakati')
+def tokenize(text: str, args: str = '-O wakati') -> List[str]:
+    tagger = MeCab.Tagger(args)
     return tagger.parse(text).strip().split(' ')
 
 
