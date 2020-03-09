@@ -31,16 +31,30 @@ class SWEM:
         self.uniform_range = uniform_range
         self.embed_dim = self.model.wv.vector_size
 
+    def _word_embed(self, token: str) -> np.ndarray:
+        """ Get word embeddings of given token.
+
+        Args:
+            token (str): A word token to embed.
+
+        Returns:
+            numpy.ndarray: An array with shape (self.embed_dim, )
+        """
+        try:
+            return self.model.wv[token]
+        except Exception as e:
+            print(e)
+            return np.random.uniform(
+                self.uniform_range[0],
+                self.uniform_range[1],
+                self.embed_dim
+            )
+
     def _doc_embed(self, tokens: List[str]) -> np.ndarray:
         doc_embed = []
         for token in tokens:
-            try:
-                doc_embed.append(self.model.wv[token])
-            except Exception as e:
-                print(e)
-                doc_embed.append(np.random.uniform(self.uniform_range[0],
-                                                   self.uniform_range[1],
-                                                   self.embed_dim))
+            word_embed = self._word_embed(token)
+            doc_embed.append(word_embed)
         return np.array(doc_embed)
 
     @staticmethod

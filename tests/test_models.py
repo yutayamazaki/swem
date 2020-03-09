@@ -29,6 +29,11 @@ class SWEMTests(unittest.TestCase):
     def setUp(self):
         self.swem = models.SWEM(MockW2V())
 
+    def test_word_embed(self):
+        token = 'もも'
+        embed = self.swem._word_embed(token)
+        assert embed.shape == (200, )
+
     def test_doc_embed(self):
         tokens = ['すもも', 'も', 'もも', 'も', 'もも', 'の', 'うち']
         ret = self.swem._doc_embed(tokens)
