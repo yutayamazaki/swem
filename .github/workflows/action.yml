@@ -35,3 +35,6 @@ jobs:
       run: |
         pip install pytest
         python -m pytest tests
+    - name: Mypy type checking
+      run: |
+        mypy swem
