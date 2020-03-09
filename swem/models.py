@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 import MeCab
 import numpy as np
@@ -28,8 +28,8 @@ class SWEM:
         if tokenizer is None:
             tokenizer = tokenize
         self.tokenizer = tokenizer
-        self.uniform_range = uniform_range
-        self.embed_dim = self.model.wv.vector_size
+        self.uniform_range: Tuple[float, ...] = uniform_range
+        self.embed_dim: Tuple[int, ...] = self.model.wv.vector_size
 
     def _word_embed(self, token: str) -> np.ndarray:
         """ Get word embeddings of given token.
@@ -59,20 +59,21 @@ class SWEM:
 
     @staticmethod
     def _hierarchical_pool(doc_embed: np.ndarray, n: int) -> np.ndarray:
-        text_len = doc_embed.shape[0]
+        text_len: int = doc_embed.shape[0]
         if n > text_len:
             raise ValueError(f'window size [{n}] must be less '
                              f'than text length{text_len}.')
 
-        n_iters = text_len - n + 1
-        pooled_doc_embed = [
+        n_iters: int = text_len - n + 1
+        pooled_doc_embed: List[np.ndarray] = [
             np.mean(doc_embed[i:i + n], axis=0) for i in range(n_iters)
         ]
         return np.max(pooled_doc_embed, axis=0)
 
-    def infer_vector(self, doc: str, method='max', n=3) -> np.ndarray:
-        tokens = self.tokenizer(doc)
-        doc_embed = self._doc_embed(tokens)
+    def infer_vector(self, doc: str, method: str = 'max',
+                     n: int = 3) -> np.ndarray:
+        tokens: List[str] = self.tokenizer(doc)
+        doc_embed: np.ndarray = self._doc_embed(tokens)
 
         if method == 'max':
             return doc_embed.max(axis=0)
