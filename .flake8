@@ -1,4 +1,4 @@
 [flake8]
 max-line-length = 79
 exclude =
-    src/__init__.py
+    swem/__init__.py

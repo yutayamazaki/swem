@@ -1,6 +1,6 @@
 import unittest
 
-from src import models
+from swem import models
 
 
 def test_tokenize():
