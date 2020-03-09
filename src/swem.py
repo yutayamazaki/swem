@@ -1,8 +1,10 @@
+from typing import List
+
 import MeCab
 import numpy as np
 
 
-def tokenize(text: str) -> list:
+def tokenize(text: str) -> List[str]:
     tagger = MeCab.Tagger('-O wakati')
     return tagger.parse(text).strip().split(' ')
 
@@ -34,7 +36,8 @@ class SWEM:
         for word in self.tokenizer(doc):
             try:
                 doc_embed.append(self.model.wv[word])
-            except:
+            except Exception as e:
+                print(e)
                 doc_embed.append(np.random.uniform(self.uniform_range[0],
                                                    self.uniform_range[1],
                                                    self.embed_dim))
@@ -67,4 +70,6 @@ class SWEM:
             return self._hierarchical_pool(doc_embed, n)
 
         else:
-            raise AttributeError(f'infer_vector has no attribute method [{method}].')
+            raise AttributeError(
+                f'infer_vector has no attribute [{method}] method.'
+            )
