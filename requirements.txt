@@ -1,0 +1,3 @@
+gensim
+mecab-python3
+numpy
