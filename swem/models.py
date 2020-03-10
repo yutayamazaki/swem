@@ -9,6 +9,31 @@ def tokenize(text: str, args: str = '-O wakati') -> List[str]:
     return tagger.parse(text).strip().split(' ')
 
 
+def _word_embed(
+    token: str,
+    wv,
+    uniform_range: Tuple[float, ...] = (-0.01, 0.01)
+) -> np.ndarray:
+    """ Get word embeddings of given token.
+
+    Args:
+        token (str): A word token to embed.
+
+    Returns:
+        numpy.ndarray: An array with shape (self.embed_dim, )
+    """
+    try:
+        return wv[token]
+    except Exception as e:
+        print(e)
+        embed_dim = wv.vector_size
+        return np.random.uniform(
+            uniform_range[0],
+            uniform_range[1],
+            embed_dim
+        )
+
+
 class SWEM:
     """Implementation of SWEM.
 
@@ -29,25 +54,6 @@ class SWEM:
         self.uniform_range: Tuple[float, ...] = uniform_range
         self.embed_dim: Tuple[int, ...] = self.model.wv.vector_size
 
-    def _word_embed(self, token: str) -> np.ndarray:
-        """ Get word embeddings of given token.
-
-        Args:
-            token (str): A word token to embed.
-
-        Returns:
-            numpy.ndarray: An array with shape (self.embed_dim, )
-        """
-        try:
-            return self.model.wv[token]
-        except Exception as e:
-            print(e)
-            return np.random.uniform(
-                self.uniform_range[0],
-                self.uniform_range[1],
-                self.embed_dim
-            )
-
     def _doc_embed(self, tokens: List[str]) -> np.ndarray:
         """ Get document embeddings of given tokens.
 
@@ -59,7 +65,9 @@ class SWEM:
         """
         doc_embed = []
         for token in tokens:
-            word_embed: np.ndarray = self._word_embed(token)
+            word_embed: np.ndarray = _word_embed(
+                token, self.model.wv, self.uniform_range
+            )
             doc_embed.append(word_embed)
         return np.array(doc_embed)
 

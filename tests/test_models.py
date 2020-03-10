@@ -12,6 +12,13 @@ def test_tokenize():
     assert tokens == ['私', 'は', 'バナナ', 'です', '。']
 
 
+def test_word_embed():
+    token = '私'
+    w2v = MockW2V()
+    embed = models._word_embed(token, wv=w2v.wv)
+    assert embed.shape == (200, )
+
+
 class MockW2V:
 
     class MockWV:
@@ -28,11 +35,6 @@ class SWEMTests(unittest.TestCase):
 
     def setUp(self):
         self.swem = models.SWEM(MockW2V())
-
-    def test_word_embed(self):
-        token = 'もも'
-        embed = self.swem._word_embed(token)
-        assert embed.shape == (200, )
 
     def test_doc_embed(self):
         tokens = ['すもも', 'も', 'もも', 'も', 'もも', 'の', 'うち']
