@@ -7,6 +7,6 @@ if __name__ == '__main__':
     swem_embed = swem.SWEM(model)
 
     doc = 'すもももももももものうち'
-    embed = swem_embed.infer_vector(doc, method='average')
+    embed = swem_embed.infer_vector(doc, method='max')
     print(embed)
     print(embed.shape)
