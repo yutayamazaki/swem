@@ -1,5 +1,6 @@
 from typing import List, Tuple
 
+from gensim.models.keyedvectors import Word2VecKeyedVectors
 import MeCab
 import numpy as np
 
@@ -11,13 +12,16 @@ def tokenize(text: str, args: str = '-O wakati') -> List[str]:
 
 def _word_embed(
     token: str,
-    wv,
+    wv: Word2VecKeyedVectors,
     uniform_range: Tuple[float, ...] = (-0.01, 0.01)
 ) -> np.ndarray:
     """ Get word embeddings of given token.
 
     Args:
         token (str): A word token to embed.
+        wv (Word2VecKeyedVectors): Vocabularies dictionary.
+        uniform_range (Tuple[float, ...]): A range of uniform distribution to
+                                           generate random vector.
 
     Returns:
         numpy.ndarray: An array with shape (self.embed_dim, )
@@ -52,7 +56,6 @@ class SWEM:
             tokenizer = tokenize
         self.tokenizer = tokenizer
         self.uniform_range: Tuple[float, ...] = uniform_range
-        self.embed_dim: Tuple[int, ...] = self.model.wv.vector_size
 
     def _doc_embed(self, tokens: List[str]) -> np.ndarray:
         """ Get document embeddings of given tokens.
