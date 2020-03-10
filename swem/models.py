@@ -38,6 +38,25 @@ def _word_embed(
         )
 
 
+def _doc_embed(tokens: List[str], wv: Word2VecKeyedVectors,
+               uniform_range: Tuple[float, ...]) -> np.ndarray:
+    """ Get document embeddings of given tokens.
+
+    Args:
+        tokens (List[str]): A word tokens to calculate embeddding.
+
+    Returns:
+        numpy.ndarray: An embedding array with shape (self.embed_dim, ).
+    """
+    doc_embed = []
+    for token in tokens:
+        word_embed: np.ndarray = _word_embed(
+            token=token, wv=wv, uniform_range=uniform_range
+        )
+        doc_embed.append(word_embed)
+    return np.array(doc_embed)
+
+
 class SWEM:
     """Implementation of SWEM.
 
@@ -56,23 +75,6 @@ class SWEM:
             tokenizer = tokenize
         self.tokenizer = tokenizer
         self.uniform_range: Tuple[float, ...] = uniform_range
-
-    def _doc_embed(self, tokens: List[str]) -> np.ndarray:
-        """ Get document embeddings of given tokens.
-
-        Args:
-            tokens (List[str]): A word tokens to calculate embeddding.
-
-        Returns:
-            numpy.ndarray: An embedding array with shape (self.embed_dim, ).
-        """
-        doc_embed = []
-        for token in tokens:
-            word_embed: np.ndarray = _word_embed(
-                token, self.model.wv, self.uniform_range
-            )
-            doc_embed.append(word_embed)
-        return np.array(doc_embed)
 
     @staticmethod
     def _hierarchical_pool(
@@ -118,7 +120,11 @@ class SWEM:
             numpy.ndarray: An embedding array.
         """
         tokens: List[str] = self.tokenizer(doc)
-        doc_embed: np.ndarray = self._doc_embed(tokens)
+        doc_embed: np.ndarray = _doc_embed(
+            tokens=tokens,
+            wv=self.model.wv,
+            uniform_range=self.uniform_range
+        )
 
         if method == 'max':
             return doc_embed.max(axis=0)
