@@ -6,9 +6,9 @@ import pytest
 from swem import models
 
 
-def test_tokenize():
+def test_tokenize_ja():
     """ A simple test for swem.tokenize """
-    tokens = models.tokenize('私はバナナです。')
+    tokens = models.tokenize_ja('私はバナナです。')
     assert tokens == ['私', 'は', 'バナナ', 'です', '。']
 
 

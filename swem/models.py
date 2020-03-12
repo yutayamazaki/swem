@@ -5,7 +5,7 @@ import MeCab
 import numpy as np
 
 
-def tokenize(text: str, args: str = '-O wakati') -> List[str]:
+def tokenize_ja(text: str, args: str = '-O wakati') -> List[str]:
     tagger = MeCab.Tagger(args)
     return tagger.parse(text).strip().split(' ')
 
@@ -72,7 +72,7 @@ class SWEM:
     def __init__(self, model, tokenizer=None, uniform_range=(-0.01, 0.01)):
         self.model = model
         if tokenizer is None:
-            tokenizer = tokenize
+            tokenizer = tokenize_ja
         self.tokenizer = tokenizer
         self.uniform_range: Tuple[float, ...] = uniform_range
 
