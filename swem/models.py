@@ -69,10 +69,15 @@ class SWEM:
             A range of uniform distribution to create random embedding.
     """
 
-    def __init__(self, model, tokenizer=None, uniform_range=(-0.01, 0.01)):
+    def __init__(self, model, tokenizer=None, uniform_range=(-0.01, 0.01),
+                 lang: str='ja'):
         self.model = model
         if tokenizer is None:
-            tokenizer = tokenize_ja
+            if lang == 'ja':
+                tokenizer = tokenize_ja
+            else:
+                msg = f'Argument [lang] does not support: "{lang}".'
+                raise ValueError(msg)
         self.tokenizer = tokenizer
         self.uniform_range: Tuple[float, ...] = uniform_range
 
