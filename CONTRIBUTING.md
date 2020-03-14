@@ -20,7 +20,7 @@ The above job contains following packages.
 
 ```shell
 # Run tests and measure coverages.
-coverage run -m unittest discover tests
+coverage run -m pytest tests
 
 # Output coverage report.
 coverage report -m
