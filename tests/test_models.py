@@ -23,7 +23,6 @@ def test_doc_embed():
     tokens = ['私', 'は']
     w2v = MockW2V()
     embed = models._doc_embed(tokens, wv=w2v.wv, uniform_range=(-0.01, 0.01))
-    print(embed)
     assert embed.shape == (2, 200)
 
 
@@ -43,6 +42,11 @@ class SWEMTests(unittest.TestCase):
 
     def setUp(self):
         self.swem = models.SWEM(MockW2V())
+
+    def test_init_raise_lang(self):
+        """ Chech ValueError for invalid lang passed. """
+        with pytest.raises(ValueError):
+            models.SWEM(MockW2V(), lang='en')
 
     def test_infer_vector(self):
         methods = {
@@ -67,3 +71,11 @@ class SWEMTests(unittest.TestCase):
         doc_embed = models._doc_embed(doc, self.swem.model.wv, (-1, 1))
         ret = self.swem._hierarchical_pool(doc_embed, n_windows=3)
         assert ret.shape == (200, )
+
+    def test_hierarchical_pool_raise(self):
+        """ ValueError: when invalid n_windows passed. """
+        doc = '桃'
+        doc_embed = models._doc_embed(doc, self.swem.model.wv, (-1, 1))
+        with pytest.raises(ValueError):
+            # text_length: 1, n_windows: 3
+            ret = self.swem._hierarchical_pool(doc_embed, n_windows=3)
