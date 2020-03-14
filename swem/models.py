@@ -1,4 +1,3 @@
-import re
 from typing import List, Tuple
 
 from gensim.models.keyedvectors import Word2VecKeyedVectors
@@ -12,11 +11,8 @@ def tokenize_ja(text: str, args: str = '-O wakati') -> List[str]:
 
 
 def tokenize_en(text: str) -> List[str]:
-    text = text.replace('.', ' .')
-    text = text.replace(',', ' ,')
-    text = text.replace('!', ' !')
-    text = text.replace('?', ' ?')
-    return text.split()
+    text_processed = text.replace('.', ' .').replace(',', ' ,')
+    return text_processed.replace('?', ' ?').replace('!', ' !').split()
 
 
 def _word_embed(
@@ -79,7 +75,7 @@ class SWEM:
     """
 
     def __init__(self, model, tokenizer=None, uniform_range=(-0.01, 0.01),
-                 lang: str='ja'):
+                 lang: str = 'ja'):
         self.model = model
         if tokenizer is None:
             if lang == 'ja':
