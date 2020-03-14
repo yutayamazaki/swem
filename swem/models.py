@@ -1,3 +1,4 @@
+import re
 from typing import List, Tuple
 
 from gensim.models.keyedvectors import Word2VecKeyedVectors
@@ -8,6 +9,14 @@ import numpy as np
 def tokenize_ja(text: str, args: str = '-O wakati') -> List[str]:
     tagger = MeCab.Tagger(args)
     return tagger.parse(text).strip().split(' ')
+
+
+def tokenize_en(text: str) -> List[str]:
+    text = text.replace('.', ' .')
+    text = text.replace(',', ' ,')
+    text = text.replace('!', ' !')
+    text = text.replace('?', ' ?')
+    return text.split()
 
 
 def _word_embed(

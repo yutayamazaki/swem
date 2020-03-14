@@ -11,6 +11,12 @@ def test_tokenize_ja():
     tokens = models.tokenize_ja('私はバナナです。')
     assert tokens == ['私', 'は', 'バナナ', 'です', '。']
 
+def test_tokenize_en():
+    """ test for swem.models.tokenize_en """
+    text = 'This, is an implementation of SWEM.'
+    tokens = models.tokenize_en(text)
+    expected = ['This', ',', 'is', 'an', 'implementation', 'of', 'SWEM', '.']
+    assert tokens == expected
 
 def test_word_embed():
     token = '私'
