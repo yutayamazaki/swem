@@ -1,8 +1,3 @@
-import unittest
-
-import numpy as np
-import pytest
-
 from swem import tokenizers
 
 
