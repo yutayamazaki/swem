@@ -1,18 +1,9 @@
 from typing import List, Tuple
 
 from gensim.models.keyedvectors import Word2VecKeyedVectors
-import MeCab
 import numpy as np
 
-
-def tokenize_ja(text: str, args: str = '-O wakati') -> List[str]:
-    tagger = MeCab.Tagger(args)
-    return tagger.parse(text).strip().split(' ')
-
-
-def tokenize_en(text: str) -> List[str]:
-    text_processed = text.replace('.', ' .').replace(',', ' ,')
-    return text_processed.replace('?', ' ?').replace('!', ' !').split()
+from swem import tokenizers
 
 
 def _word_embed(
@@ -80,9 +71,9 @@ class SWEM:
         self.model = model
         if tokenizer is None:
             if lang == 'ja':
-                tokenizer = tokenize_ja
+                tokenizer = tokenizers.tokenize_ja
             elif lang == 'en':
-                tokenizer = tokenize_en
+                tokenizer = tokenizers.tokenize_en
             else:
                 msg = f'Argument [lang] does not support: "{lang}".'
                 raise ValueError(msg)
