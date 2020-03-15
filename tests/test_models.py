@@ -54,7 +54,12 @@ class SWEMTests(unittest.TestCase):
     def test_init_raise_lang(self):
         """ Chech ValueError for invalid lang passed. """
         with pytest.raises(ValueError):
-            models.SWEM(MockW2V(), lang='en')
+            models.SWEM(MockW2V(), lang='es')
+
+    def test_init_tokenizer_en(self):
+        """ Passed lang='en', tokenizer equals to tokenize_en """
+        model = models.SWEM(MockW2V(), lang='en')
+        assert model.tokenizer == models.tokenize_en
 
     def test_infer_vector(self):
         methods = {

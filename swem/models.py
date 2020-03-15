@@ -72,6 +72,7 @@ class SWEM:
             Callable object to tokenize input text.
         uniform_range: Tuple[float, ...]
             A range of uniform distribution to create random embedding.
+        lang (str): 'ja' or `en`. Default value is 'ja'.
     """
 
     def __init__(self, model, tokenizer=None, uniform_range=(-0.01, 0.01),
@@ -80,6 +81,8 @@ class SWEM:
         if tokenizer is None:
             if lang == 'ja':
                 tokenizer = tokenize_ja
+            elif lang == 'en':
+                tokenizer = tokenize_en
             else:
                 msg = f'Argument [lang] does not support: "{lang}".'
                 raise ValueError(msg)
