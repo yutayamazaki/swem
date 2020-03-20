@@ -8,14 +8,14 @@ from swem import tokenizers
 
 def _word_embed(
     token: str,
-    wv: Word2VecKeyedVectors,
+    kv: Word2VecKeyedVectors,
     uniform_range: Tuple[float, ...] = (-0.01, 0.01)
 ) -> np.ndarray:
     """ Get word embeddings of given token.
 
     Args:
         token (str): A word token to embed.
-        wv (Word2VecKeyedVectors): Vocabularies dictionary.
+        kv (Word2VecKeyedVectors): Vocabularies dictionary.
         uniform_range (Tuple[float, ...]): A range of uniform distribution to
                                            generate random vector.
 
@@ -23,10 +23,10 @@ def _word_embed(
         numpy.ndarray: An array with shape (self.embed_dim, )
     """
     try:
-        return wv[token]
+        return kv[token]
     except Exception as e:
         print(e)
-        embed_dim = wv.vector_size
+        embed_dim = kv.vector_size
         return np.random.uniform(
             uniform_range[0],
             uniform_range[1],
@@ -34,7 +34,7 @@ def _word_embed(
         )
 
 
-def _doc_embed(tokens: List[str], wv: Word2VecKeyedVectors,
+def _doc_embed(tokens: List[str], kv: Word2VecKeyedVectors,
                uniform_range: Tuple[float, ...]) -> np.ndarray:
     """ Get document embeddings of given tokens.
 
@@ -47,7 +47,7 @@ def _doc_embed(tokens: List[str], wv: Word2VecKeyedVectors,
     doc_embed = []
     for token in tokens:
         word_embed: np.ndarray = _word_embed(
-            token=token, wv=wv, uniform_range=uniform_range
+            token=token, kv=kv, uniform_range=uniform_range
         )
         doc_embed.append(word_embed)
     return np.array(doc_embed)
@@ -126,7 +126,7 @@ class SWEM:
         tokens: List[str] = self.tokenizer(doc)
         doc_embed: np.ndarray = _doc_embed(
             tokens=tokens,
-            wv=self.model.wv,
+            kv=self.model.wv,
             uniform_range=self.uniform_range
         )
 

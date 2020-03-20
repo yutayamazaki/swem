@@ -9,14 +9,14 @@ from swem import models, tokenizers
 def test_word_embed():
     token = '私'
     w2v = MockW2V()
-    embed = models._word_embed(token, wv=w2v.wv)
+    embed = models._word_embed(token, kv=w2v.wv)
     assert embed.shape == (200, )
 
 
 def test_doc_embed():
     tokens = ['私', 'は']
     w2v = MockW2V()
-    embed = models._doc_embed(tokens, wv=w2v.wv, uniform_range=(-0.01, 0.01))
+    embed = models._doc_embed(tokens, kv=w2v.wv, uniform_range=(-0.01, 0.01))
     assert embed.shape == (2, 200)
 
 
