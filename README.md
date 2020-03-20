@@ -16,14 +16,20 @@ pip install swem
 
 ## Example
 
+Examples are available in [examples](https://github.com/yutayamazaki/swem/tree/master/examples) directory.  
+
+- [simple_embedding_en.py](https://github.com/yutayamazaki/swem/blob/master/examples/simple_embedding_en.py)
+- [simple_embedding_ja.py](https://github.com/yutayamazaki/swem/blob/master/examples/simple_embedding_ja.py)
+
 - Japanese
 
 ```python example.py
 import swem
-from gensim.models import Word2Vec
+
+from gensim.models import KeyedVectors
 
 if __name__ == '__main__':
-    model = Word2Vec.load('wiki_mecab-ipadic-neologd.model')
+    model = KeyedVectors.load('wiki_mecab-ipadic-neologd.kv')
     swem_embed = swem.SWEM(model)
 
     doc = 'すもももももももものうち'
@@ -41,10 +47,10 @@ Results
 ```python example.py
 import swem
 
-from gensim.models import Word2Vec
+from gensim.models import KeyedVectors
 
 if __name__ == '__main__':
-    model = Word2Vec.load('wiki_mecab-ipadic-neologd.model')
+    model = KeyedVectors.load('wiki_mecab-ipadic-neologd.kv')
     swem_embed = swem.SWEM(model, lang='en')
 
     doc = 'This is an implementation of SWEM.'
