@@ -21,7 +21,8 @@ Examples are available in [examples](https://github.com/yutayamazaki/swem/tree/m
 - [simple_embedding_en.py](https://github.com/yutayamazaki/swem/blob/master/examples/simple_embedding_en.py)
 - [simple_embedding_ja.py](https://github.com/yutayamazaki/swem/blob/master/examples/simple_embedding_ja.py)
 
-- Japanese
+
+### Japanese
 
 ```python example.py
 import swem
@@ -42,7 +43,7 @@ Results
 (200,)
 ```
 
-- English
+### English
 
 ```python example.py
 import swem
