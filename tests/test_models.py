@@ -13,10 +13,10 @@ def test_word_embed():
     assert embed.shape == (200, )
 
 
-def test_doc_embed():
+def test_word_embeds():
     tokens = ['私', 'は']
     w2v = MockW2V()
-    embed = models._doc_embed(tokens, kv=w2v.wv, uniform_range=(-0.01, 0.01))
+    embed = models._word_embeds(tokens, kv=w2v.wv, uniform_range=(-0.01, 0.01))
     assert embed.shape == (2, 200)
 
 
@@ -66,15 +66,15 @@ class SWEMTests(unittest.TestCase):
             self.swem.infer_vector(doc, method=method)
 
     def test_hierarchical_pool(self):
-        doc = 'すもももももももものうち'
-        doc_embed = models._doc_embed(doc, self.swem.model.wv, (-1, 1))
-        ret = self.swem._hierarchical_pool(doc_embed, n_windows=3)
+        text = 'すもももももももものうち'
+        word_embeds = models._word_embeds(text, self.swem.model.wv, (-1, 1))
+        ret = self.swem._hierarchical_pool(word_embeds, n_windows=3)
         assert ret.shape == (200, )
 
     def test_hierarchical_pool_raise(self):
         """ ValueError: when invalid n_windows passed. """
         doc = '桃'
-        doc_embed = models._doc_embed(doc, self.swem.model.wv, (-1, 1))
+        word_embeds = models._word_embeds(doc, self.swem.model.wv, (-1, 1))
         with pytest.raises(ValueError):
             # text_length: 1, n_windows: 3
-            self.swem._hierarchical_pool(doc_embed, n_windows=3)
+            self.swem._hierarchical_pool(word_embeds, n_windows=3)

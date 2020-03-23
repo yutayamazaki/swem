@@ -11,7 +11,7 @@ def _word_embed(
     kv: Word2VecKeyedVectors,
     uniform_range: Tuple[float, ...] = (-0.01, 0.01)
 ) -> np.ndarray:
-    """ Get word embeddings of given token.
+    """ Get word embedding of given token.
 
     Args:
         token (str): A word token to embed.
@@ -34,15 +34,16 @@ def _word_embed(
         )
 
 
-def _doc_embed(tokens: List[str], kv: Word2VecKeyedVectors,
-               uniform_range: Tuple[float, ...]) -> np.ndarray:
-    """ Get document embeddings of given tokens.
+def _word_embeds(tokens: List[str], kv: Word2VecKeyedVectors,
+                 uniform_range: Tuple[float, ...]) -> np.ndarray:
+    """ Get word embeddings of given tokens.
 
     Args:
         tokens (List[str]): A word tokens to calculate embeddding.
 
     Returns:
-        numpy.ndarray: An embedding array with shape (self.embed_dim, ).
+        numpy.ndarray: An embedding array with shape
+                       (token_size, self.embed_dim, ).
     """
     doc_embed = []
     for token in tokens:
@@ -124,7 +125,7 @@ class SWEM:
             numpy.ndarray: An embedding array.
         """
         tokens: List[str] = self.tokenizer(doc)
-        doc_embed: np.ndarray = _doc_embed(
+        doc_embed: np.ndarray = _word_embeds(
             tokens=tokens,
             kv=self.model.wv,
             uniform_range=self.uniform_range
