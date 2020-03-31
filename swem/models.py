@@ -58,8 +58,7 @@ class SWEM:
     """Implementation of SWEM.
 
     Args:
-        model: gensim.models.word2vec.Word2Vec
-            Word2Vec model
+        kv: gensim.models.keyedvectors.Word2VecKeyedVectors
         tokenizer: Callable
             Callable object to tokenize input text.
         uniform_range: Tuple[float, ...]
@@ -67,9 +66,9 @@ class SWEM:
         lang (str): 'ja' or `en`. Default value is 'ja'.
     """
 
-    def __init__(self, model, tokenizer=None, uniform_range=(-0.01, 0.01),
+    def __init__(self, kv, tokenizer=None, uniform_range=(-0.01, 0.01),
                  lang: str = 'ja'):
-        self.model = model
+        self.kv = kv
         if tokenizer is None:
             if lang == 'ja':
                 tokenizer = tokenizers.tokenize_ja
@@ -127,7 +126,7 @@ class SWEM:
         tokens: List[str] = self.tokenizer(doc)
         doc_embed: np.ndarray = _word_embeds(
             tokens=tokens,
-            kv=self.model.wv,
+            kv=self.kv,
             uniform_range=self.uniform_range
         )
 
