@@ -1,9 +1,7 @@
-from typing import List, Tuple
+from typing import Callable, List, Tuple
 
 from gensim.models.keyedvectors import Word2VecKeyedVectors
 import numpy as np
-
-from swem import tokenizers
 
 
 def _word_embed(
@@ -63,21 +61,14 @@ class SWEM:
             Callable object to tokenize input text.
         uniform_range: Tuple[float, ...]
             A range of uniform distribution to create random embedding.
-        lang (str): 'ja' or `en`. Default value is 'ja'.
     """
 
-    def __init__(self, kv, tokenizer=None, uniform_range=(-0.01, 0.01),
-                 lang: str = 'ja'):
-        self.kv = kv
-        if tokenizer is None:
-            if lang == 'ja':
-                tokenizer = tokenizers.tokenize_ja
-            elif lang == 'en':
-                tokenizer = tokenizers.tokenize_en
-            else:
-                msg: str = f'Argument [lang] does not support: "{lang}".'
-                raise ValueError(msg)
-        self.tokenizer = tokenizer
+    def __init__(self, kv, tokenizer: Callable, uniform_range=(-0.01, 0.01)):
+        self.kv: Word2VecKeyedVectors = kv
+
+        if not callable(tokenizer):
+            raise ValueError('tokenizer must be callable object.')
+        self.tokenizer: Callable = tokenizer
         self.uniform_range: Tuple[float, ...] = uniform_range
 
     @staticmethod

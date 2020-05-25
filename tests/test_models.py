@@ -31,17 +31,11 @@ class MockKV:
 class SWEMTests(unittest.TestCase):
 
     def setUp(self):
-        self.swem = models.SWEM(MockKV())
+        self.swem = models.SWEM(MockKV(), tokenizers.tokenize_ja)
 
-    def test_init_raise_lang(self):
-        """ Chech ValueError for invalid lang passed. """
+    def init_tokenizer_is_not_callable(self):
         with pytest.raises(ValueError):
-            models.SWEM(MockKV(), lang='es')
-
-    def test_init_tokenizer_en(self):
-        """ Passed lang='en', tokenizer equals to tokenize_en """
-        model = models.SWEM(MockKV(), lang='en')
-        assert model.tokenizer == tokenizers.tokenize_en
+            models.SWEM(MockKV(), 'aaaa')
 
     def test_infer_vector(self):
         methods = {

@@ -1,10 +1,10 @@
 import swem
-
+from swem import tokenizers
 from gensim.models import KeyedVectors
 
 if __name__ == '__main__':
     model = KeyedVectors.load('wiki_mecab-ipadic-neologd.kv')
-    swem_embed = swem.SWEM(model)
+    swem_embed = swem.SWEM(model, tokenizers.tokenize_ja)
 
     doc = 'すもももももももものうち'
     embed = swem_embed.infer_vector(doc, method='max')
