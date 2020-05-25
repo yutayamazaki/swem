@@ -143,6 +143,6 @@ class SWEM:
             return self._hierarchical_pool(doc_embed, n_windows)
 
         else:
-            raise AttributeError(
+            raise ValueError(
                 f'infer_vector has no attribute [{method}] method.'
             )

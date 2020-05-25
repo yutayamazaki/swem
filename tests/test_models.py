@@ -58,7 +58,7 @@ class SWEMTests(unittest.TestCase):
     def test_infer_vector_raise(self):
         doc = 'すもももももももものうち'
         method = 'invalid method'
-        with pytest.raises(AttributeError):
+        with pytest.raises(ValueError):
             self.swem.infer_vector(doc, method=method)
 
     def test_hierarchical_pool(self):
