@@ -14,7 +14,7 @@ def _word_embed(
     """ Get word embedding of given token.
 
     Args:
-        token (str): A word token to embed.
+        token (str): A word token to get embed.
         kv (Word2VecKeyedVectors): Vocabularies dictionary.
         uniform_range (Tuple[float, ...]): A range of uniform distribution to
                                            generate random vector.
@@ -26,7 +26,7 @@ def _word_embed(
         return kv[token]
     except Exception as e:
         print(e)
-        embed_dim = kv.vector_size
+        embed_dim: int = kv.vector_size
         return np.random.uniform(
             uniform_range[0],
             uniform_range[1],
@@ -45,7 +45,7 @@ def _word_embeds(tokens: List[str], kv: Word2VecKeyedVectors,
         numpy.ndarray: An embedding array with shape
                        (token_size, self.embed_dim, ).
     """
-    doc_embed = []
+    doc_embed: List[np.ndarray] = []
     for token in tokens:
         word_embed: np.ndarray = _word_embed(
             token=token, kv=kv, uniform_range=uniform_range
@@ -75,7 +75,7 @@ class SWEM:
             elif lang == 'en':
                 tokenizer = tokenizers.tokenize_en
             else:
-                msg = f'Argument [lang] does not support: "{lang}".'
+                msg: str = f'Argument [lang] does not support: "{lang}".'
                 raise ValueError(msg)
         self.tokenizer = tokenizer
         self.uniform_range: Tuple[float, ...] = uniform_range
