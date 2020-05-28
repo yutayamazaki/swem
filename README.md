@@ -20,7 +20,6 @@ Examples are available in [examples](https://github.com/yutayamazaki/swem/tree/m
 
 - [simple_embedding_en.py](https://github.com/yutayamazaki/swem/blob/master/examples/simple_embedding_en.py)
 - [simple_embedding_ja.py](https://github.com/yutayamazaki/swem/blob/master/examples/simple_embedding_ja.py)
-- [use_custom_tokenizer_ja.py](https://github.com/yutayamazaki/swem/blob/master/examples/use_custom_tokenizer_ja.py)
 
 
 ### Japanese
