@@ -1,9 +1,16 @@
 import unittest
+from typing import List
 
+import MeCab
 import numpy as np
 import pytest
 
-from swem import models, tokenizers
+from swem import models
+
+
+def tokenize_ja(text: str, args: str = '-O wakati') -> List[str]:
+    tagger = MeCab.Tagger(args)
+    return tagger.parse(text).strip().split(' ')
 
 
 def test_word_embed():
@@ -31,7 +38,7 @@ class MockKV:
 class SWEMTests(unittest.TestCase):
 
     def setUp(self):
-        self.swem = models.SWEM(MockKV(), tokenizers.tokenize_ja)
+        self.swem = models.SWEM(MockKV(), tokenize_ja)
 
     def init_tokenizer_is_not_callable(self):
         with pytest.raises(ValueError):
