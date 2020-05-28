@@ -1,4 +1,5 @@
 coverage
 flake8
+mecab-python3
 mypy
 pytest
