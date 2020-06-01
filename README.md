@@ -38,8 +38,8 @@ def tokenize_ja(text: str, args: str = '-O wakati') -> List[str]:
 
 
 if __name__ == '__main__':
-    model = KeyedVectors.load('wiki_mecab-ipadic-neologd.kv')
-    swem_embed = swem.SWEM(model, tokenize_ja)
+    kv = KeyedVectors.load('wiki_mecab-ipadic-neologd.kv')
+    swem_embed = swem.SWEM(kv, tokenize_ja)
 
     doc = 'すもももももももものうち'
     embed = swem_embed.infer_vector(doc, method='max')
@@ -66,8 +66,8 @@ def tokenize_en(text: str) -> List[str]:
 
 
 if __name__ == '__main__':
-    model = KeyedVectors.load('wiki_mecab-ipadic-neologd.kv')
-    swem_embed = swem.SWEM(model, tokenizer=tokenize_en)
+    kv = KeyedVectors.load('wiki_mecab-ipadic-neologd.kv')
+    swem_embed = swem.SWEM(kv, tokenizer=tokenize_en)
 
     doc = 'This is an implementation of SWEM.'
     embed = swem_embed.infer_vector(doc, method='max')

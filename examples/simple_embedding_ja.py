@@ -11,10 +11,10 @@ def tokenize_ja(text: str, args: str = '-O wakati') -> List[str]:
 
 
 if __name__ == '__main__':
-    model = KeyedVectors.load('wiki_mecab-ipadic-neologd.kv')
-    swem_embed = swem.SWEM(model, tokenize_ja)
+    kv = KeyedVectors.load('wiki_mecab-ipadic-neologd.kv')
+    swem_embed = swem.SWEM(kv, tokenize_ja)
 
-    doc = 'すもももももももものうち'
+    doc: str = 'すもももももももものうち'
     embed = swem_embed.infer_vector(doc, method='max')
     print(embed)
     print(embed.shape)
