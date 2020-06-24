@@ -34,7 +34,7 @@ def get_tests_requires():
 setup(
     name='swem',
     version=get_version(),
-    url='https://github.com/yutayamazaki/SWEM-Python',
+    url='https://github.com/yutayamazaki/swem',
     author='Yuta Yamazaki',
     author_email='yu.yamazakii@gmail.com',
     maintainer='Yuta Yamazaki',
