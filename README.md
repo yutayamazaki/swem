@@ -18,8 +18,36 @@ pip install swem
 
 Examples are available in [examples](https://github.com/yutayamazaki/swem/tree/master/examples) directory.  
 
+
+- [functional_api.py](https://github.com/yutayamazaki/swem/blob/master/examples/functional_api.py)
 - [simple_embedding_en.py](https://github.com/yutayamazaki/swem/blob/master/examples/simple_embedding_en.py)
 - [simple_embedding_ja.py](https://github.com/yutayamazaki/swem/blob/master/examples/simple_embedding_ja.py)
+
+
+### Functional API
+
+```python example.py
+from typing import List
+
+import MeCab
+import swem
+from gensim.models import KeyedVectors
+
+
+def tokenize_ja(text: str, args: str = '-O wakati') -> List[str]:
+    tagger = MeCab.Tagger(args)
+    return tagger.parse(text).strip().split(' ')
+
+
+if __name__ == '__main__':
+    kv = KeyedVectors.load('wiki_mecab-ipadic-neologd.kv')
+    swem_embed = swem.SWEM(kv, tokenize_ja)
+
+    doc: str = 'すもももももももものうち'
+    tokens: List[str] = tokenize_ja(doc)
+    embed = swem.infer_vector(tokens=tokens, kv=kv, method='max')
+    print(embed.shape)
+```
 
 
 ### Japanese
