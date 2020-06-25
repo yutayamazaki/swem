@@ -29,24 +29,19 @@ Examples are available in [examples](https://github.com/yutayamazaki/swem/tree/m
 ```python example.py
 from typing import List
 
-import MeCab
+import numpy as np
 import swem
 from gensim.models import KeyedVectors
 
-
-def tokenize_ja(text: str, args: str = '-O wakati') -> List[str]:
-    tagger = MeCab.Tagger(args)
-    return tagger.parse(text).strip().split(' ')
-
-
 if __name__ == '__main__':
-    kv = KeyedVectors.load('wiki_mecab-ipadic-neologd.kv')
-    swem_embed = swem.SWEM(kv, tokenize_ja)
+    kv: KeyedVectors = KeyedVectors(vector_size=200)
+    tokens: List[str] = ['I', 'have', 'a', 'pen']
 
-    doc: str = 'すもももももももものうち'
-    tokens: List[str] = tokenize_ja(doc)
-    embed = swem.infer_vector(tokens=tokens, kv=kv, method='max')
+    embed: np.ndarray = swem.infer_vector(
+        tokens=tokens, kv=kv, method='concat'
+    )
     print(embed.shape)
+
 ```
 
 
