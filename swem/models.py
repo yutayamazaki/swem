@@ -52,6 +52,64 @@ def _word_embeds(tokens: List[str], kv: Word2VecKeyedVectors,
     return np.array(doc_embed)
 
 
+def _hierarchical_pool(
+    tokens_embed: np.ndarray,
+    num_windows: int = 3
+) -> np.ndarray:
+    """ Hierarchical Pooling: It takes word-order or spatial information
+        into consideration when calculate document embeddings.
+
+    Args:
+        tokens_embed (np.ndarray): An embeded document vector.
+        num_windows (int): A sizw of window to consider sequence.
+
+    Returns:
+        numpy.ndarray: An embedding array with shape (self.embed_dim, ).
+    """
+    text_len: int = tokens_embed.shape[0]
+    if num_windows > text_len:
+        raise ValueError(f'window size [{num_windows}] must be less '
+                         f'than text length{text_len}.')
+
+    num_iters: int = text_len - num_windows + 1
+    pooled_doc_embed: List[np.ndarray] = [
+        np.mean(tokens_embed[i:i + num_windows],
+                axis=0) for i in range(num_iters)
+    ]
+    return np.max(pooled_doc_embed, axis=0)
+
+
+def infer_vector(
+    tokens: List[str],
+    kv,
+    method: str = 'avg',
+    uniform_range: Tuple[float, float] = (-0.01, 0.01),
+    num_windows: int = 3
+) -> np.ndarray:
+    tokens_embed: np.ndarray = _word_embeds(
+        tokens=tokens,
+        kv=kv,
+        uniform_range=uniform_range
+    )
+
+    if method == 'max':
+        return tokens_embed.max(axis=0)
+
+    elif method == 'avg':
+        return tokens_embed.mean(axis=0)
+
+    elif method == 'concat':
+        return np.hstack([tokens_embed.mean(axis=0), tokens_embed.max(axis=0)])
+
+    elif method == 'hierarchical':
+        return _hierarchical_pool(tokens_embed, num_windows)
+
+    else:
+        raise ValueError(
+            f'infer_vector has no attribute [{method}] method.'
+        )
+
+
 class SWEM:
     """Implementation of SWEM.
 
@@ -71,38 +129,11 @@ class SWEM:
         self.tokenizer: Callable = tokenizer
         self.uniform_range: Tuple[float, ...] = uniform_range
 
-    @staticmethod
-    def _hierarchical_pool(
-        doc_embed: np.ndarray,
-        n_windows: int
-    ) -> np.ndarray:
-        """ Hierarchical Pooling: It takes word-order or spatial information
-            into consideration when calculate document embeddings.
-
-        Args:
-            doc_embed (np.ndarray): An embeded document vector.
-            n_windows (int): A sizw of window to consider sequence.
-
-        Returns:
-            numpy.ndarray: An embedding array with shape (self.embed_dim, ).
-        """
-        text_len: int = doc_embed.shape[0]
-        if n_windows > text_len:
-            raise ValueError(f'window size [{n_windows}] must be less '
-                             f'than text length{text_len}.')
-
-        n_iters: int = text_len - n_windows + 1
-        pooled_doc_embed: List[np.ndarray] = [
-            np.mean(doc_embed[i:i + n_windows],
-                    axis=0) for i in range(n_iters)
-        ]
-        return np.max(pooled_doc_embed, axis=0)
-
     def infer_vector(
         self,
         doc: str,
         method: str = 'max',
-        n_windows: int = 3
+        num_windows: int = 3
     ) -> np.ndarray:
         """ A main method to get document vector.
 
@@ -131,7 +162,7 @@ class SWEM:
             return np.hstack([doc_embed.mean(axis=0), doc_embed.max(axis=0)])
 
         elif method == 'hierarchical':
-            return self._hierarchical_pool(doc_embed, n_windows)
+            return _hierarchical_pool(doc_embed, num_windows)
 
         else:
             raise ValueError(

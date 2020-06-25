@@ -1,10 +1,11 @@
 import unittest
-from typing import List
+from typing import Dict, List, Tuple
 
 import MeCab
 import numpy as np
 import pytest
 
+import swem
 from swem import models
 
 
@@ -25,6 +26,38 @@ def test_word_embeds():
     kv = MockKV()
     embed = models._word_embeds(tokens, kv=kv, uniform_range=(-0.01, 0.01))
     assert embed.shape == (2, 200)
+
+
+def test_hierarchical_pool():
+    text: str = 'すもももももももものうち'
+    kv: MockKV = MockKV()
+    word_embeds: np.ndarray = models._word_embeds(text, kv, (-1, 1))
+    ret: np.ndarray = models._hierarchical_pool(word_embeds, num_windows=3)
+    assert ret.shape == (200, )
+
+
+def test_hierarchical_pool_raise():
+    """ ValueError: when invalid n_windows passed. """
+    doc: str = '桃'
+    kv: MockKV = MockKV()
+    word_embeds = models._word_embeds(doc, kv, (-1, 1))
+    with pytest.raises(ValueError):
+        # text_length: 1, n_windows: 3
+        models._hierarchical_pool(word_embeds, num_windows=3)
+
+
+def test_infer_vector_functional():
+    tokens = ['私', 'は', '私', 'は']
+    kv = MockKV()
+    methods: Dict[str, Tuple[int]] = {
+        'avg': (200, ),
+        'max': (200, ),
+        'concat': (400, ),
+        'hierarchical': (200, )
+    }
+    for method, shape in methods.items():
+        embed: np.ndarray = swem.infer_vector(tokens, kv=kv, method=method)
+        assert embed.shape == shape
 
 
 class MockKV:
@@ -61,17 +94,3 @@ class SWEMTests(unittest.TestCase):
         method = 'invalid method'
         with pytest.raises(ValueError):
             self.swem.infer_vector(doc, method=method)
-
-    def test_hierarchical_pool(self):
-        text = 'すもももももももものうち'
-        word_embeds = models._word_embeds(text, self.swem.kv, (-1, 1))
-        ret = self.swem._hierarchical_pool(word_embeds, n_windows=3)
-        assert ret.shape == (200, )
-
-    def test_hierarchical_pool_raise(self):
-        """ ValueError: when invalid n_windows passed. """
-        doc = '桃'
-        word_embeds = models._word_embeds(doc, self.swem.kv, (-1, 1))
-        with pytest.raises(ValueError):
-            # text_length: 1, n_windows: 3
-            self.swem._hierarchical_pool(word_embeds, n_windows=3)
