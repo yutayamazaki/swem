@@ -22,8 +22,7 @@ def _word_embed(
     """
     try:
         return kv[token]
-    except Exception as e:
-        print(e)
+    except Exception:
         embed_dim: int = kv.vector_size
         return np.random.uniform(
             uniform_range[0],
