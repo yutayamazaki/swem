@@ -101,3 +101,27 @@ Results
 ```shell
 (200,)
 ```
+
+
+## Set random seed
+
+SWEM generates random vector when given token is out of vocaburary. To reproduce token's embeddings, you need to set seed of NumPy.
+
+```python
+from typing import List
+
+import numpy as np
+import swem
+from gensim.models import KeyedVectors
+
+if __name__ == '__main__':
+    np.random.seed(0)
+    kv: KeyedVectors = KeyedVectors(vector_size=200)
+    tokens: List[str] = ['I', 'have', 'a', 'pen']
+
+    embed: np.ndarray = swem.infer_vector(
+        tokens=tokens, kv=kv, method='concat'
+    )
+    print(embed.shape)
+
+```
