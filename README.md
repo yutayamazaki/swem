@@ -125,3 +125,17 @@ if __name__ == '__main__':
     print(embed.shape)
 
 ```
+
+
+## Download w2v models.
+
+```python
+import swem
+swem.download_w2v(lang='ja')
+```
+
+```shell
+Downloading w2v file to /Users/<username>/.swem/ja.zip
+Extract zipfile into /Users/<username>/.swem/ja
+Success to extract files.
+```
