@@ -1,12 +1,12 @@
 from typing import Callable, List, Tuple
 
-from gensim.models.keyedvectors import Word2VecKeyedVectors
+from gensim.models import KeyedVectors
 import numpy as np
 
 
 def _word_embed(
     token: str,
-    kv: Word2VecKeyedVectors,
+    kv: KeyedVectors,
     uniform_range: Tuple[float, ...] = (-0.01, 0.01)
 ) -> np.ndarray:
     """ Get word embedding of given token.
@@ -31,7 +31,7 @@ def _word_embed(
         )
 
 
-def _word_embeds(tokens: List[str], kv: Word2VecKeyedVectors,
+def _word_embeds(tokens: List[str], kv: KeyedVectors,
                  uniform_range: Tuple[float, ...]) -> np.ndarray:
     """ Get word embeddings of given tokens.
 
@@ -80,7 +80,7 @@ def _hierarchical_pool(
 
 def infer_vector(
     tokens: List[str],
-    kv,
+    kv: KeyedVectors,
     method: str = 'avg',
     uniform_range: Tuple[float, float] = (-0.01, 0.01),
     num_windows: int = 3
@@ -120,8 +120,11 @@ class SWEM:
             A range of uniform distribution to create random embedding.
     """
 
-    def __init__(self, kv, tokenizer: Callable, uniform_range=(-0.01, 0.01)):
-        self.kv: Word2VecKeyedVectors = kv
+    def __init__(
+        self, kv: KeyedVectors, tokenizer: Callable,
+        uniform_range: Tuple[float, float] = (-0.01, 0.01)
+    ):
+        self.kv: KeyedVectors = kv
 
         if not callable(tokenizer):
             raise ValueError('tokenizer must be callable object.')
