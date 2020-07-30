@@ -11,6 +11,10 @@ W2V_IDS: Dict[str, str] = {
 
 
 def download_w2v(lang: str = 'ja') -> None:
+    """Download pretrained w2v model of specified language.
+    Args:
+        lang (str): What language to download.
+    """
     file_id: str = W2V_IDS[lang]
     home_dir: str = os.path.expanduser('~')
     swem_dir: str = os.path.join(home_dir, '.swem')
@@ -29,7 +33,12 @@ def download_w2v(lang: str = 'ja') -> None:
         print('Success to extract files.')
 
 
-def _download_file_from_google_drive(file_id, destination):
+def _download_file_from_google_drive(file_id: str, destination: str):
+    """Download file from Google Drive directly.
+    Args:
+        file_id (str): File id of the file to download.
+        destination (str): A path to save file.
+    """
     url: str = 'https://docs.google.com/uc?export=download'
 
     session = requests.Session()
@@ -45,6 +54,7 @@ def _download_file_from_google_drive(file_id, destination):
 
 
 def _get_confirm_token(response) -> str:
+    """Get confirm token from cookies to download large files directory."""
     for key, value in response.cookies.items():
         if key.startswith('download_warning'):
             return value
