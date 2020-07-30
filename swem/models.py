@@ -7,15 +7,15 @@ import numpy as np
 def _word_embed(
     token: str,
     kv: KeyedVectors,
-    uniform_range: Tuple[float, ...] = (-0.01, 0.01)
+    uniform_range: Tuple[float, float] = (-0.01, 0.01)
 ) -> np.ndarray:
     """ Get word embedding of given token.
 
     Args:
         token (str): A word token to get embed.
-        kv (Word2VecKeyedVectors): Vocabularies dictionary.
-        uniform_range (Tuple[float, ...]): A range of uniform distribution to
-                                           generate random vector.
+        kv (KeyedVectors): Vocabularies dictionary.
+        uniform_range (Tuple[float, float]): A range of uniform distribution to
+                                             generate random vector.
 
     Returns:
         numpy.ndarray: An array with shape (self.embed_dim, )
@@ -32,11 +32,15 @@ def _word_embed(
 
 
 def _word_embeds(tokens: List[str], kv: KeyedVectors,
-                 uniform_range: Tuple[float, ...]) -> np.ndarray:
+                 uniform_range: Tuple[float, float]) -> np.ndarray:
     """ Get word embeddings of given tokens.
 
     Args:
         tokens (List[str]): A word tokens to calculate embeddding.
+        kv (KeyedVectors): A dictionary of vocabularies.
+        uniform_range (Tuple[float, float]):
+            A range of uniform distributioin to
+            generate random vector.
 
     Returns:
         numpy.ndarray: An embedding array with shape
@@ -85,6 +89,16 @@ def infer_vector(
     uniform_range: Tuple[float, float] = (-0.01, 0.01),
     num_windows: int = 3
 ) -> np.ndarray:
+    """Infer vector by swem with specified method.
+    Args:
+        tokens (List[str]): A list of tokens like ['I', 'am', 'a', 'pen'].
+        kv (KeyedVectors): Vocabularies.
+        method (str): One of them ('avg', 'max', 'concat', 'hierarchical').
+        uniform_range (Tuple[float, float]): Value range of random vector.
+        num_windows (int): A window size used in hierarchical pooling.
+    Returns:
+        np.ndarray: With shape (N,).
+    """
     tokens_embed: np.ndarray = _word_embeds(
         tokens=tokens,
         kv=kv,
@@ -129,7 +143,7 @@ class SWEM:
         if not callable(tokenizer):
             raise ValueError('tokenizer must be callable object.')
         self.tokenizer: Callable = tokenizer
-        self.uniform_range: Tuple[float, ...] = uniform_range
+        self.uniform_range: Tuple[float, float] = uniform_range
 
     def infer_vector(
         self,
