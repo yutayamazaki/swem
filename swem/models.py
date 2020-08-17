@@ -1,7 +1,31 @@
-from typing import Callable, List, Tuple
+import os
+from typing import Callable, Dict, List, Tuple
 
 from gensim.models import KeyedVectors
 import numpy as np
+
+import swem
+
+
+def load_kv(lang: str = 'ja') -> KeyedVectors:
+    """Load local KeyedVectors. If specified model does not exists,
+       download pretrained KeyedVectors.
+    Args:
+        lang (str): Specify the language.
+    Returns:
+        (KeyedVectors): Loaded KeyedVectors.
+    """
+    if lang not in ('ja'):
+        raise ValueError(f'swem.load_kv has no support lang={lang}.')
+    file_mapping: Dict[str, str] = {
+        'ja': 'wiki_mecab-ipadic-neologd.kv'
+    }
+    home_dir: str = os.path.expanduser('~')
+    lang_dir: str = os.path.join(home_dir, '.swem', lang)
+    path: str = os.path.join(lang_dir, file_mapping[lang])
+    if not os.path.exists(path):
+        swem.download_w2v(lang=lang)
+    return KeyedVectors.load(path)
 
 
 def _word_embed(
