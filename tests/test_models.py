@@ -15,14 +15,14 @@ def tokenize_ja(text: str, args: str = '-O wakati') -> List[str]:
     return tagger.parse(text).strip().split(' ')
 
 
-def test_load_kv_success():
-    kv = swem.load_kv(lang='ja')
+def test_load_w2v_success():
+    kv = swem.load_w2v(lang='ja')
     assert isinstance(kv, Word2VecKeyedVectors)
 
 
-def test_load_kv_invalid_lang():
+def test_load_w2v_invalid_lang():
     with pytest.raises(ValueError):
-        swem.load_kv(lang='invalid-lang')
+        swem.load_w2v(lang='invalid-lang')
 
 
 def test_word_embed():

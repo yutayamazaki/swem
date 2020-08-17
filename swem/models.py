@@ -7,7 +7,7 @@ import numpy as np
 import swem
 
 
-def load_kv(lang: str = 'ja') -> KeyedVectors:
+def load_w2v(lang: str = 'ja') -> KeyedVectors:
     """Load local KeyedVectors. If specified model does not exists,
        download pretrained KeyedVectors.
     Args:
