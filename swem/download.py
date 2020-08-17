@@ -31,6 +31,7 @@ def download_w2v(lang: str = 'ja') -> None:
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         zip_ref.extractall(open_dir)
         print('Success to extract files.')
+        os.remove(zip_path)
 
 
 def _download_file_from_google_drive(file_id: str, destination: str):
