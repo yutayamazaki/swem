@@ -12,7 +12,7 @@ assignees: ''
 
 ## Environment
 
-- drf-logger version: 0.0.4
+- swem version: 0.0.4
 - Python version: 3.7.2
 - OS: Ubuntu Server 18.4
 - Other libraries and their versions:
