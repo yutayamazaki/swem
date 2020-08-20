@@ -1,21 +1,45 @@
-from typing import Callable, List, Tuple
+import os
+from typing import Callable, Dict, List, Tuple
 
-from gensim.models.keyedvectors import Word2VecKeyedVectors
+from gensim.models import KeyedVectors
 import numpy as np
+
+import swem
+
+
+def load_w2v(lang: str = 'ja') -> KeyedVectors:
+    """Load local KeyedVectors. If specified model does not exists,
+       download pretrained KeyedVectors.
+    Args:
+        lang (str): Specify the language.
+    Returns:
+        (KeyedVectors): Loaded KeyedVectors.
+    """
+    if lang not in ('ja'):
+        raise ValueError(f'swem.load_kv has no support lang={lang}.')
+    file_mapping: Dict[str, str] = {
+        'ja': 'wiki_mecab-ipadic-neologd.kv'
+    }
+    home_dir: str = os.path.expanduser('~')
+    lang_dir: str = os.path.join(home_dir, '.swem', lang)
+    path: str = os.path.join(lang_dir, file_mapping[lang])
+    if not os.path.exists(path):
+        swem.download_w2v(lang=lang)
+    return KeyedVectors.load(path)
 
 
 def _word_embed(
     token: str,
-    kv: Word2VecKeyedVectors,
-    uniform_range: Tuple[float, ...] = (-0.01, 0.01)
+    kv: KeyedVectors,
+    uniform_range: Tuple[float, float] = (-0.01, 0.01)
 ) -> np.ndarray:
     """ Get word embedding of given token.
 
     Args:
         token (str): A word token to get embed.
-        kv (Word2VecKeyedVectors): Vocabularies dictionary.
-        uniform_range (Tuple[float, ...]): A range of uniform distribution to
-                                           generate random vector.
+        kv (KeyedVectors): Vocabularies dictionary.
+        uniform_range (Tuple[float, float]): A range of uniform distribution to
+                                             generate random vector.
 
     Returns:
         numpy.ndarray: An array with shape (self.embed_dim, )
@@ -31,12 +55,16 @@ def _word_embed(
         )
 
 
-def _word_embeds(tokens: List[str], kv: Word2VecKeyedVectors,
-                 uniform_range: Tuple[float, ...]) -> np.ndarray:
+def _word_embeds(tokens: List[str], kv: KeyedVectors,
+                 uniform_range: Tuple[float, float]) -> np.ndarray:
     """ Get word embeddings of given tokens.
 
     Args:
         tokens (List[str]): A word tokens to calculate embeddding.
+        kv (KeyedVectors): A dictionary of vocabularies.
+        uniform_range (Tuple[float, float]):
+            A range of uniform distributioin to
+            generate random vector.
 
     Returns:
         numpy.ndarray: An embedding array with shape
@@ -80,11 +108,21 @@ def _hierarchical_pool(
 
 def infer_vector(
     tokens: List[str],
-    kv,
+    kv: KeyedVectors,
     method: str = 'avg',
     uniform_range: Tuple[float, float] = (-0.01, 0.01),
     num_windows: int = 3
 ) -> np.ndarray:
+    """Infer vector by swem with specified method.
+    Args:
+        tokens (List[str]): A list of tokens like ['I', 'am', 'a', 'pen'].
+        kv (KeyedVectors): Vocabularies.
+        method (str): One of them ('avg', 'max', 'concat', 'hierarchical').
+        uniform_range (Tuple[float, float]): Value range of random vector.
+        num_windows (int): A window size used in hierarchical pooling.
+    Returns:
+        np.ndarray: With shape (N,).
+    """
     tokens_embed: np.ndarray = _word_embeds(
         tokens=tokens,
         kv=kv,
@@ -120,13 +158,16 @@ class SWEM:
             A range of uniform distribution to create random embedding.
     """
 
-    def __init__(self, kv, tokenizer: Callable, uniform_range=(-0.01, 0.01)):
-        self.kv: Word2VecKeyedVectors = kv
+    def __init__(
+        self, kv: KeyedVectors, tokenizer: Callable,
+        uniform_range: Tuple[float, float] = (-0.01, 0.01)
+    ):
+        self.kv: KeyedVectors = kv
 
         if not callable(tokenizer):
             raise ValueError('tokenizer must be callable object.')
         self.tokenizer: Callable = tokenizer
-        self.uniform_range: Tuple[float, ...] = uniform_range
+        self.uniform_range: Tuple[float, float] = uniform_range
 
     def infer_vector(
         self,

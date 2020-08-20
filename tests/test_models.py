@@ -1,6 +1,7 @@
 import unittest
 from typing import Dict, List, Tuple
 
+from gensim.models.keyedvectors import Word2VecKeyedVectors
 import MeCab
 import numpy as np
 import pytest
@@ -12,6 +13,16 @@ from swem import models
 def tokenize_ja(text: str, args: str = '-O wakati') -> List[str]:
     tagger = MeCab.Tagger(args)
     return tagger.parse(text).strip().split(' ')
+
+
+def test_load_w2v_success():
+    kv = swem.load_w2v(lang='ja')
+    assert isinstance(kv, Word2VecKeyedVectors)
+
+
+def test_load_w2v_invalid_lang():
+    with pytest.raises(ValueError):
+        swem.load_w2v(lang='invalid-lang')
 
 
 def test_word_embed():

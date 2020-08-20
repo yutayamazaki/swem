@@ -127,11 +127,12 @@ if __name__ == '__main__':
 ```
 
 
-## Download w2v models.
+## Download pretained w2v and use it.
 
 ```python
 import swem
 swem.download_w2v(lang='ja')
+kv = swem.load_w2v(lang='ja')
 ```
 
 ```shell
