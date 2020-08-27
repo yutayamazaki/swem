@@ -16,12 +16,12 @@ pip install swem
 
 ## Example
 
-Examples are available in [examples](https://github.com/yutayamazaki/swem/tree/master/examples) directory.  
+Examples are available in [examples](https://github.com/yutayamazaki/swem/tree/main/examples) directory.
 
 
-- [functional_api.py](https://github.com/yutayamazaki/swem/blob/master/examples/functional_api.py)
-- [simple_embedding_en.py](https://github.com/yutayamazaki/swem/blob/master/examples/simple_embedding_en.py)
-- [simple_embedding_ja.py](https://github.com/yutayamazaki/swem/blob/master/examples/simple_embedding_ja.py)
+- [functional_api.py](https://github.com/yutayamazaki/swem/blob/main/examples/functional_api.py)
+- [simple_embedding_en.py](https://github.com/yutayamazaki/swem/blob/main/examples/simple_embedding_en.py)
+- [simple_embedding_ja.py](https://github.com/yutayamazaki/swem/blob/main/examples/simple_embedding_ja.py)
 
 
 ### Functional API
