@@ -50,8 +50,7 @@ def _download_file_from_google_drive(file_id: str, destination: str):
     if token:
         params: Dict[str, str] = {'id': file_id, 'confirm': token}
         resp = session.get(url, params=params, stream=True)
-
-    _save_response_content(resp, destination)
+        _save_response_content(resp, destination)
 
 
 def _get_confirm_token(response) -> str:
