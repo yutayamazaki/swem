@@ -1,6 +1,6 @@
-coverage
-flake8
+coverage==5.3
+flake8==3.8.4
 mecab-python3
-mypy
-pytest
+mypy==0.790
+pytest==6.1.2
 unidic-lite
