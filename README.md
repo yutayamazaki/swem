@@ -50,22 +50,16 @@ if __name__ == '__main__':
 ```python example.py
 from typing import List
 
-import MeCab
 import swem
 from gensim.models import KeyedVectors
 
 
-def tokenize_ja(text: str, args: str = '-O wakati') -> List[str]:
-    tagger = MeCab.Tagger(args)
-    return tagger.parse(text).strip().split(' ')
-
-
 if __name__ == '__main__':
-    kv = KeyedVectors.load('wiki_mecab-ipadic-neologd.kv')
-    swem_embed = swem.SWEM(kv, tokenize_ja)
+    kv: KeyedVectors = KeyedVectors(vector_size=200)
+    swem_embed = swem.SWEM(kv)
 
-    doc = 'すもももももももものうち'
-    embed = swem_embed.infer_vector(doc, method='max')
+    tokens: List[str] = ['すもも', 'も', 'もも', 'も', 'もも', 'の', 'うち']
+    embed = swem_embed.infer_vector(tokens, method='max')
     print(embed.shape)
 ```
 
@@ -83,17 +77,12 @@ import swem
 from gensim.models import KeyedVectors
 
 
-def tokenize_en(text: str) -> List[str]:
-    text_processed = text.replace('.', ' .').replace(',', ' ,')
-    return text_processed.replace('?', ' ?').replace('!', ' !').split()
-
-
 if __name__ == '__main__':
-    kv = KeyedVectors.load('wiki_mecab-ipadic-neologd.kv')
-    swem_embed = swem.SWEM(kv, tokenizer=tokenize_en)
+    kv: KeyedVectors = KeyedVectors(vector_size=200)
+    swem_embed = swem.SWEM(kv)
 
-    doc = 'This is an implementation of SWEM.'
-    embed = swem_embed.infer_vector(doc, method='max')
+    tokens: List[str] = ['This', 'is', 'an', 'implementation', 'of', 'SWEM']
+    embed = swem_embed.infer_vector(tokens, method='max')
     print(embed.shape)
 ```
 
