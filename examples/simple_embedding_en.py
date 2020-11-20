@@ -10,10 +10,10 @@ def tokenize_en(text: str) -> List[str]:
 
 
 if __name__ == '__main__':
-    kv = KeyedVectors.load('wiki_mecab-ipadic-neologd.kv')
-    swem_embed = swem.SWEM(kv, tokenizer=tokenize_en)
+    kv: KeyedVectors = KeyedVectors(vector_size=200)
+    swem_embed = swem.SWEM(kv)
 
-    doc: str = 'This is an implementation of SWEM.'
-    embed = swem_embed.infer_vector(doc, method='max')
+    tokens: List[str] = ['This', 'is', 'an', 'implementation', 'of', 'SWEM']
+    embed = swem_embed.infer_vector(tokens, method='max')
     print(embed)
     print(embed.shape)

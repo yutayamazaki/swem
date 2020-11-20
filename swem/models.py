@@ -1,5 +1,5 @@
 import os
-from typing import Callable, Dict, List, Tuple
+from typing import Dict, List, Tuple
 
 from gensim.models import KeyedVectors
 import numpy as np
@@ -152,40 +152,32 @@ class SWEM:
 
     Args:
         kv: gensim.models.keyedvectors.Word2VecKeyedVectors
-        tokenizer: Callable
-            Callable object to tokenize input text.
         uniform_range: Tuple[float, ...]
             A range of uniform distribution to create random embedding.
     """
-
     def __init__(
-        self, kv: KeyedVectors, tokenizer: Callable,
+        self, kv: KeyedVectors,
         uniform_range: Tuple[float, float] = (-0.01, 0.01)
     ):
         self.kv: KeyedVectors = kv
-
-        if not callable(tokenizer):
-            raise ValueError('tokenizer must be callable object.')
-        self.tokenizer: Callable = tokenizer
         self.uniform_range: Tuple[float, float] = uniform_range
 
     def infer_vector(
         self,
-        doc: str,
+        tokens: List[str],
         method: str = 'max',
         num_windows: int = 3
     ) -> np.ndarray:
         """ A main method to get document vector.
 
         Args:
-            doc (str): A document str to get embeddings.
+            tokens (List[str]): A list of tokens.
             method (str): Designate method to pool.
                          ('max', 'avg', 'concat', 'hierarchical')
 
         Returns:
             numpy.ndarray: An embedding array.
         """
-        tokens: List[str] = self.tokenizer(doc)
         doc_embed: np.ndarray = _word_embeds(
             tokens=tokens,
             kv=self.kv,
